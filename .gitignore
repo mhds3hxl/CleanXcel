@@ -33,3 +33,6 @@ Thumbs.db
 # Logs & Cache
 *.log
 .pytest_cache/
+
+# Local Netlify folder
+.netlify

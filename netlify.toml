@@ -3,6 +3,11 @@
   command = "python3 scripts/build_standalone_tool.py"
 
 [[redirects]]
+  from = "/"
+  to = "/SheetForge_Pro_Tool.html"
+  status = 200
+
+[[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/SheetForge_Pro_Tool.html"
   status = 200
