@@ -1,0 +1,8 @@
+[build]
+  publish = "static"
+  command = "python3 scripts/build_standalone_tool.py"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
