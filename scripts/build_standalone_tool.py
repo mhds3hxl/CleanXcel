@@ -52,7 +52,11 @@ with open(out_path, "w", encoding="utf-8") as f:
 
 print(f"Generated standalone HTML tool: {out_path} ({os.path.getsize(out_path):,} bytes)")
 
-# Copy to Downloads
-downloads_target = r"C:\Users\EMVIGO-USER\Downloads\SheetForge_Pro_Tool.html"
-shutil.copy2(out_path, downloads_target)
-print(f"Copied standalone HTML tool to: {downloads_target}")
+# Copy to Downloads if target exists
+try:
+    downloads_target = r"C:\Users\EMVIGO-USER\Downloads\SheetForge_Pro_Tool.html"
+    if os.path.exists(os.path.dirname(downloads_target)):
+        shutil.copy2(out_path, downloads_target)
+        print(f"Copied standalone HTML tool to: {downloads_target}")
+except Exception:
+    pass
