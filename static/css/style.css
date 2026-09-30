@@ -1,0 +1,237 @@
+/* CleanXcel Custom Modern Styling */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --bg-dark: #040404;
+    --bg-dark-card: #0c0d12;
+    --bg-dark-card-hover: #141620;
+    --bg-light: #F8F9FC;
+    
+    --text-dark-bg: #828282;
+    --text-light-bg: #4C4C4C;
+    --text-white: #FFFFFF;
+    
+    --primary-blue: #019FFD;
+    --primary-deep: #0350FE;
+    --btn-gradient: linear-gradient(90deg, #019FFD 0%, #0350FE 100%);
+    --heading-gradient: linear-gradient(90deg, #019FFD 0%, #FFFFFF 100%);
+    
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    
+    --border-color: #1a1b26;
+    --border-light: rgba(255, 255, 255, 0.08);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-dark-bg);
+    overflow-x: hidden;
+    position: relative;
+}
+
+code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Full-Screen Interactive Background Canvas */
+#bg-particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ========================================================================== */
+/* ELEGANT SPREADSHEET GRID WITH SMOOTH FADEOUT                              */
+/* ========================================================================== */
+
+/* Hero Section & Upload Box Containers */
+.hero-spreadsheet-header,
+#upload-section #drop-zone {
+    position: relative;
+    overflow: hidden;
+    background: #0c0d12;
+    border: 1px solid var(--border-color);
+    border-radius: 1.5rem;
+    z-index: 2;
+}
+
+/* 1. Excel Spreadsheet Net/Grid Pattern (Always visible from start, fading smoothly all the way down) */
+.hero-spreadsheet-header::before,
+#upload-section #drop-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0; /* Full height of box */
+    background-image: 
+        linear-gradient(to right, rgba(1, 159, 253, 0.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(1, 159, 253, 0.22) 1px, transparent 1px);
+    background-size: 32px 24px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.55) 35%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.55) 35%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+    pointer-events: none;
+    opacity: 1; /* Always visible from page load */
+    z-index: 1;
+}
+
+/* 2. Soft Top Light Backdrop Halo ONLY (NO mouse-following light effect) */
+.hero-spreadsheet-header::after,
+#upload-section #drop-zone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse 80% 60% at 50% -10%,
+        rgba(1, 159, 253, 0.22),
+        rgba(3, 80, 254, 0.06) 55%,
+        transparent 85%
+    );
+    pointer-events: none;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+/* Clean Dark Boxes Elsewhere */
+.glass-panel,
+.glass-card {
+    position: relative;
+    overflow: hidden;
+    background: #0c0d12;
+    border: 1px solid var(--border-color);
+    border-radius: 1.25rem;
+    z-index: 2;
+}
+
+.glass-card {
+    border-radius: 0.875rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    border-color: rgba(1, 159, 253, 0.45);
+    box-shadow: 0 10px 25px -5px rgba(1, 159, 253, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Primary Button Styling */
+.btn-primary-gradient {
+    background: var(--btn-gradient) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(1, 159, 253, 0.35);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 5;
+    position: relative;
+}
+
+.btn-primary-gradient:hover {
+    box-shadow: 0 6px 28px rgba(1, 159, 253, 0.65);
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.1);
+}
+
+.btn-primary-gradient:active {
+    transform: translateY(0) scale(0.99);
+}
+
+/* Two-Color Banner & Heading Gradients */
+.text-banner-heading {
+    background: linear-gradient(90deg, #019FFD 0%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-blue-white {
+    background: linear-gradient(135deg, #019FFD 0%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #040404;
+}
+::-webkit-scrollbar-thumb {
+    background: #252836;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #019FFD;
+}
+
+/* Tab Active Indicator */
+.tab-btn.active {
+    background: linear-gradient(90deg, rgba(1, 159, 253, 0.2), rgba(3, 80, 254, 0.2));
+    border-color: #019FFD;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(1, 159, 253, 0.3);
+}
+
+/* Table styles */
+.data-table-container {
+    max-height: 480px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.data-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0c0d12;
+    box-shadow: 0 1px 0 var(--border-color);
+}
+
+.data-table tr:hover td {
+    background-color: rgba(1, 159, 253, 0.08);
+}
+
+/* Intro Hero Animations & Glows */
+@keyframes floatAnimation {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+    animation: floatAnimation 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(1, 159, 253, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(3, 80, 254, 0.7);
+    }
+}
+
+.glow-btn {
+    animation: pulseGlow 3s infinite;
+}
+
+/* Smooth Transitions */
+.page-transition {
+    transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+}
+
+.page-hidden {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    display: none !important;
+}
+
+.page-visible {
+    opacity: 1;
+    transform: translateY(0);
+    display: block !important;
+}

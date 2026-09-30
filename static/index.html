@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanXcel • Enterprise 10L+ Rows Excel & CSV Cleaner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#040404',
+                        darkcard: '#0c0d12',
+                        darkborder: '#1a1b26',
+                        mutedtext: '#828282',
+                        lightbg: '#F8F9FC',
+                        lighttext: '#4C4C4C',
+                        brandblue: '#019FFD',
+                        branddeep: '#0350FE',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-[#040404] text-[#828282] antialiased selection:bg-[#019FFD] selection:text-white relative">
+
+    <!-- Interactive Background Particle & Light Canvas -->
+    <canvas id="bg-particle-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <header class="border-b border-[#1a1b26] bg-[#040404]/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <!-- Logo -->
+                <button id="nav-btn-logo" class="flex items-center space-x-3 group text-left focus:outline-none">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-[#019FFD] to-[#0350FE] flex items-center justify-center shadow-lg shadow-[#019FFD]/30 group-hover:scale-105 transition-transform">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl font-bold tracking-tight text-white">Clean<span class="text-[#019FFD]">Xcel</span></span>
+                            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[#019FFD]/15 text-[#019FFD] border border-[#019FFD]/30">10L+ Engine</span>
+                        </div>
+                        <p class="text-[11px] text-[#828282]">High-Scale Tabular Cleaner & Extractor</p>
+                    </div>
+                </button>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-2 border-l border-[#1a1b26] pl-6">
+                    <button id="nav-btn-home" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#0c0d12] border border-[#019FFD]/40 transition-all flex items-center space-x-1.5">
+                        <i data-lucide="home" class="w-3.5 h-3.5 text-[#019FFD]"></i>
+                        <span>Intro & Overview</span>
+                    </button>
+                    <button id="nav-btn-tool" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#828282] hover:text-white hover:bg-[#0c0d12] transition-all flex items-center space-x-1.5">
+                        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                        <span>Clean Dataset</span>
+                    </button>
+                </nav>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <a href="/api/download-tool-html" download="CleanXcel_Tool.html" class="hidden sm:flex px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#0c0d12] text-gray-300 border border-[#1a1b26] hover:border-[#019FFD] hover:text-white transition-all items-center space-x-1.5 shadow-sm" title="Download standalone HTML tool">
+                    <i data-lucide="download" class="w-3.5 h-3.5 text-[#019FFD]"></i>
+                    <span>📥 Download Tool (.html)</span>
+                </a>
+                <button id="btn-load-demo" class="btn-primary-gradient px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 shadow-md">
+                    <i data-lucide="zap" class="w-3.5 h-3.5 text-white"></i>
+                    <span>⚡ Try 10 Lakh (1M) Sample</span>
+                </button>
+                <button id="btn-reset-session" class="hidden px-3 py-1.5 rounded-lg text-xs font-medium text-gray-400 hover:text-white bg-[#0c0d12] hover:bg-[#141620] transition-all items-center space-x-1 border border-[#1a1b26]">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>New File</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow flex flex-col min-h-[calc(100vh-140px)]">
+
+        <!-- =================================================================== -->
+        <!-- 1. LANDING INTRO PAGE (ACTIVE BY DEFAULT)                          -->
+        <!-- =================================================================== -->
+        <div id="intro-landing-page" class="space-y-12 page-transition">
+            
+            <!-- Hero Section -->
+            <div class="hero-spreadsheet-header spotlight-box relative rounded-3xl p-8 sm:p-14 overflow-hidden border border-[#1a1b26] bg-[#0c0d12] shadow-2xl text-center space-y-6">
+                <!-- Background Ambient Glow -->
+                <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#019FFD]/15 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#019FFD]/10 border border-[#019FFD]/30 text-xs font-bold text-[#019FFD]">
+                    <span class="w-2 h-2 rounded-full bg-[#019FFD] animate-ping"></span>
+                    <span>ENTERPRISE-GRADE TABULAR ENGINE</span>
+                </div>
+
+                <!-- Two-Color Banner Heading (#019FFD & #FFFFFF) -->
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                    Welcome to <span class="text-banner-heading">CleanXcel</span>
+                </h1>
+
+                <p class="max-w-3xl mx-auto text-base sm:text-lg text-[#828282] leading-relaxed">
+                    Ultra-fast data cleaner & bulk extractor engineered for <strong class="text-white">10 Lakhs+ (1,000,000+) row</strong> spreadsheets. Clean messy columns, remove blank rows, deduplicate repeating names, and extract matching keys in <strong class="text-[#019FFD]">under 1 second</strong> with zero browser freezing.
+                </p>
+
+                <!-- Hero Action Buttons -->
+                <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button id="btn-intro-lets-go" class="btn-primary-gradient px-8 py-4 rounded-xl text-base sm:text-lg font-extrabold flex items-center space-x-3 glow-btn shadow-xl hover:scale-105 transition-all">
+                        <span>Let's Begin</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <button id="btn-intro-demo" class="px-6 py-4 rounded-xl text-sm font-semibold bg-[#0c0d12] border border-[#1a1b26] text-gray-200 hover:border-[#019FFD] hover:text-white transition-all flex items-center space-x-2 shadow-md">
+                        <i data-lucide="play-circle" class="w-4 h-4 text-[#019FFD]"></i>
+                        <span>⚡ Try 1,000,000 Row Live Demo</span>
+                    </button>
+                </div>
+
+                <!-- Live Metrics Pills -->
+                <div class="pt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-left max-w-4xl mx-auto">
+                    <div class="p-4 rounded-xl bg-[#0c0d12] border border-[#1a1b26]">
+                        <div class="text-xs text-[#828282] flex items-center justify-between">
+                            <span>Max Scale</span>
+                            <i data-lucide="database" class="w-4 h-4 text-[#019FFD]"></i>
+                        </div>
+                        <div class="text-xl font-extrabold text-white mt-1">10 Lakh+ Rows</div>
+                        <div class="text-[11px] text-[#828282] mt-0.5">Streaming to disk</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-[#0c0d12] border border-[#1a1b26]">
+                        <div class="text-xs text-[#828282] flex items-center justify-between">
+                            <span>Engine Speed</span>
+                            <i data-lucide="zap" class="w-4 h-4 text-[#019FFD]"></i>
+                        </div>
+                        <div class="text-xl font-extrabold text-[#019FFD] mt-1">&lt; 200 ms</div>
+                        <div class="text-[11px] text-[#828282] mt-0.5">Rust-backed Polars</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-[#0c0d12] border border-[#1a1b26]">
+                        <div class="text-xs text-[#828282] flex items-center justify-between">
+                            <span>Browser Memory</span>
+                            <i data-lucide="cpu" class="w-4 h-4 text-emerald-400"></i>
+                        </div>
+                        <div class="text-xl font-extrabold text-emerald-400 mt-1">Zero Bloat</div>
+                        <div class="text-[11px] text-[#828282] mt-0.5">No RAM crashes</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-[#0c0d12] border border-[#1a1b26]">
+                        <div class="text-xs text-[#828282] flex items-center justify-between">
+                            <span>Formats</span>
+                            <i data-lucide="file-check" class="w-4 h-4 text-amber-400"></i>
+                        </div>
+                        <div class="text-xl font-extrabold text-white mt-1">CSV, XLSX, TSV</div>
+                        <div class="text-[11px] text-[#828282] mt-0.5">Parquet & JSON</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Capabilities Showcase -->
+            <div class="space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl font-bold text-white">What CleanXcel Does For You</h2>
+                    <p class="text-sm text-[#828282]">Click any feature card below to see an interactive overview before you begin.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="glass-card p-6 space-y-3 cursor-pointer group hover:border-[#019FFD] transition-all" onclick="document.getElementById('btn-intro-lets-go').click()">
+                        <div class="w-12 h-12 rounded-xl bg-[#019FFD]/10 border border-[#019FFD]/30 flex items-center justify-center text-[#019FFD] group-hover:scale-110 transition-transform">
+                            <i data-lucide="eraser" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-[#019FFD] transition-colors">1. Blank Columns & Null Cleaner</h3>
+                        <p class="text-xs text-[#828282] leading-relaxed">
+                            Auto-detect 100% empty columns, remove null whitespace, apply custom null percentage thresholds (e.g. drop columns >90% empty), and purge empty lines.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="glass-card p-6 space-y-3 cursor-pointer group hover:border-[#019FFD] transition-all" onclick="document.getElementById('btn-intro-lets-go').click()">
+                        <div class="w-12 h-12 rounded-xl bg-[#0350FE]/10 border border-[#0350FE]/30 flex items-center justify-center text-[#019FFD] group-hover:scale-110 transition-transform">
+                            <i data-lucide="target" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-[#019FFD] transition-colors">2. Bulk Key & ID Extractor</h3>
+                        <p class="text-xs text-[#828282] leading-relaxed">
+                            Paste or upload 500, 5,000, or 50,000 Order IDs, Phone Numbers, or Emails to extract only matching records from a 1,000,000+ row sheet instantly.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="glass-card p-6 space-y-3 cursor-pointer group hover:border-[#019FFD] transition-all" onclick="document.getElementById('btn-intro-lets-go').click()">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">3. Deduplicate Repeating Names</h3>
+                        <p class="text-xs text-[#828282] leading-relaxed">
+                            Eliminate repeating people and names with smart deduplication presets (Unique First Name, Unique Full Person, or Custom Column subset).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feature Row 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Feature 4 -->
+                    <div class="glass-card p-6 space-y-3 cursor-pointer group hover:border-[#019FFD] transition-all" onclick="document.getElementById('btn-intro-lets-go').click()">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">4. Currency & Text Scrubbing</h3>
+                        <p class="text-xs text-[#828282] leading-relaxed">
+                            Strip $, ₹, €, £, commas, and % into clean float numbers. Trim whitespace, collapse spaces, transform casing (UPPER, lower, Title Case).
+                        </p>
+                    </div>
+
+                    <!-- Feature 5 -->
+                    <div class="glass-card p-6 space-y-3 cursor-pointer group hover:border-[#019FFD] transition-all" onclick="document.getElementById('btn-intro-lets-go').click()">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="arrow-up-down" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">5. Multi-Column Sort & Rename</h3>
+                        <p class="text-xs text-[#828282] leading-relaxed">
+                            Sort by Column A, then B, then C with natural numeric ordering. Rename headers on the fly and pick required columns for output.
+                        </p>
+                    </div>
+
+                    <!-- Feature 6 -->
+                    <div class="glass-card p-6 space-y-3 cursor-pointer group hover:border-[#019FFD] transition-all" onclick="document.getElementById('btn-intro-lets-go').click()">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-[#019FFD] group-hover:scale-110 transition-transform">
+                            <i data-lucide="globe" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-[#019FFD] transition-colors">6. Category & Country Partitions</h3>
+                        <p class="text-xs text-[#828282] leading-relaxed">
+                            Export split datasets into separate Excel sheets per country/category, a downloadable ZIP archive, or a unified sorted file.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="glass-panel p-8 sm:p-10 text-center space-y-4 border border-[#019FFD]/30 bg-gradient-to-r from-[#0c0d12] via-[#040404] to-[#0c0d12]">
+                <h3 class="text-2xl font-extrabold text-white">Ready to Clean Your Tabular Data?</h3>
+                <p class="text-sm text-[#828282] max-w-xl mx-auto">No software installation required. Stream your file directly to CleanXcel's Polars Rust engine.</p>
+                <div class="pt-2 flex justify-center">
+                    <button id="btn-intro-lets-go-2" class="btn-primary-gradient px-8 py-3.5 rounded-xl text-base font-bold flex items-center space-x-2 shadow-lg">
+                        <span>Let's Begin Now</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- =================================================================== -->
+        <!-- 2. MAIN TOOL WORKSPACE PAGE (SHOWN WHEN USER CLICKS LET'S BEGIN)   -->
+        <!-- =================================================================== -->
+        <div id="main-tool-page" class="space-y-8 page-transition page-hidden flex-grow flex flex-col justify-between min-h-[calc(100vh-200px)]">
+
+            <div>
+                <!-- STEP 1: Upload Area (Bigger & Dual Options: Computer vs Drive) -->
+                <section id="upload-section" class="transition-all duration-300">
+                    <div class="glass-panel p-12 sm:p-20 border-2 border-dashed border-[#1a1b26] hover:border-[#019FFD] transition-all rounded-3xl text-center relative group cursor-pointer spotlight-box min-h-[480px] flex flex-col items-center justify-center space-y-6" id="drop-zone">
+                        <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".csv,.xlsx,.xls,.tsv,.parquet,.json,.txt">
+                        
+                        <div class="w-24 h-24 rounded-3xl bg-[#019FFD]/10 border border-[#019FFD]/30 flex items-center justify-center text-[#019FFD] group-hover:scale-110 transition-transform shadow-2xl shadow-[#019FFD]/20">
+                            <i data-lucide="upload-cloud" class="w-12 h-12"></i>
+                        </div>
+
+                        <div class="space-y-2 max-w-xl">
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Drag & Drop Your File Here</h2>
+                            <p class="text-sm sm:text-base text-[#828282]">
+                                Supports <span class="text-[#019FFD] font-mono font-semibold">.csv</span>, <span class="text-[#019FFD] font-mono font-semibold">.xlsx</span>, <span class="text-[#019FFD] font-mono font-semibold">.tsv</span>, <span class="text-[#019FFD] font-mono font-semibold">.parquet</span>, <span class="text-[#019FFD] font-mono font-semibold">.json</span> (Files up to 10+ Lakh rows)
+                            </p>
+                        </div>
+
+                        <!-- Two Explicit Upload Buttons (Computer vs Google Drive) -->
+                        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-20">
+                            <button id="btn-upload-computer" type="button" class="btn-primary-gradient px-7 py-4 rounded-xl text-sm font-bold flex items-center space-x-3 shadow-xl hover:scale-105 transition-transform">
+                                <i data-lucide="laptop" class="w-5 h-5 text-white"></i>
+                                <span>Upload from Computer</span>
+                            </button>
+
+                            <button id="btn-upload-drive" type="button" class="px-7 py-4 rounded-xl text-sm font-bold bg-[#0c0d12] border border-[#019FFD]/40 text-white hover:bg-[#141620] hover:border-[#019FFD] transition-all flex items-center space-x-3 shadow-lg">
+                                <i data-lucide="hard-drive" class="w-5 h-5 text-[#019FFD]"></i>
+                                <span>Upload from Google Drive</span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center space-x-3 text-xs text-[#828282] pt-2">
+                            <span class="px-3 py-1 rounded-md bg-[#040404] border border-[#1a1b26]">Multi-Gigabyte Streaming</span>
+                            <span>•</span>
+                            <span class="px-3 py-1 rounded-md bg-[#040404] border border-[#1a1b26]">Zero Browser RAM Overflow</span>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div id="upload-progress-container" class="hidden mt-6 max-w-md w-full mx-auto relative z-20">
+                            <div class="flex justify-between text-xs text-[#828282] mb-1">
+                                <span id="upload-status-text">Uploading and streaming to engine...</span>
+                                <span id="upload-pct-text" class="font-mono text-[#019FFD]">0%</span>
+                            </div>
+                            <div class="w-full bg-[#040404] rounded-full h-2.5 overflow-hidden border border-[#1a1b26]">
+                                <div id="upload-progress-bar" class="bg-gradient-to-r from-[#019FFD] to-[#0350FE] h-2.5 rounded-full transition-all duration-150 w-0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div id="processing-spinner" class="hidden glass-panel p-8 text-center space-y-4">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-[#019FFD] border-t-transparent"></div>
+                <p id="spinner-text" class="text-sm font-medium text-gray-300">Profiling dataset structure & blank columns...</p>
+            </div>
+
+            <!-- MAIN WORKSPACE (Shown once file is loaded) -->
+            <div id="workspace-container" class="hidden space-y-8">
+
+                <!-- STEP 2: File Health & Profile Overview -->
+                <section class="glass-panel p-6">
+                    <div class="flex flex-col sm:flex-row items-center justify-between pb-4 border-b border-[#1a1b26] gap-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 rounded-xl bg-[#0c0d12] border border-[#1a1b26] text-[#019FFD]">
+                                <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="flex items-center space-x-2">
+                                    <h2 id="active-filename" class="text-lg font-bold text-white truncate max-w-xs sm:max-w-md">data.csv</h2>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active Dataset</span>
+                                </div>
+                                <p id="profile-time-badge" class="text-xs text-[#828282]">Profiled in 120ms</p>
+                            </div>
+                        </div>
+
+                        <!-- Explicit Action Button to Upload Different File -->
+                        <div class="flex items-center space-x-3">
+                            <button id="btn-workspace-upload-new" type="button" class="btn-primary-gradient px-4 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 shadow-lg hover:scale-105 transition-transform">
+                                <i data-lucide="upload-cloud" class="w-4 h-4 text-white"></i>
+                                <span>Upload New File</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid (Centered 4 cards) -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 mt-5 max-w-3xl mx-auto">
+                        <div class="glass-card p-3.5">
+                            <div class="text-xs text-[#828282] flex items-center justify-between">
+                                <span>Total Rows</span>
+                                <i data-lucide="rows" class="w-3.5 h-3.5 text-[#019FFD]"></i>
+                            </div>
+                            <div id="stat-total-rows" class="text-xl font-bold text-white mt-1 font-mono">0</div>
+                            <div class="text-[10px] text-[#828282] mt-0.5">Records loaded</div>
+                        </div>
+
+                        <div class="glass-card p-3.5">
+                            <div class="text-xs text-[#828282] flex items-center justify-between">
+                                <span>Total Columns</span>
+                                <i data-lucide="columns" class="w-3.5 h-3.5 text-[#019FFD]"></i>
+                            </div>
+                            <div id="stat-total-cols" class="text-xl font-bold text-white mt-1 font-mono">0</div>
+                            <div class="text-[10px] text-[#828282] mt-0.5">Data fields</div>
+                        </div>
+
+                        <div class="glass-card p-3.5">
+                            <div class="text-xs text-[#828282] flex items-center justify-between">
+                                <span>Memory Size</span>
+                                <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-emerald-400"></i>
+                            </div>
+                            <div id="stat-memory-size" class="text-xl font-bold text-emerald-400 mt-1 font-mono">0 MB</div>
+                            <div class="text-[10px] text-[#828282] mt-0.5">RAM footprint</div>
+                        </div>
+
+                        <div class="glass-card p-3.5">
+                            <div class="text-xs text-[#828282] flex items-center justify-between">
+                                <span>File Size</span>
+                                <i data-lucide="archive" class="w-3.5 h-3.5 text-purple-400"></i>
+                            </div>
+                            <div id="stat-file-size" class="text-xl font-bold text-purple-400 mt-1 font-mono">0 MB</div>
+                            <div class="text-[10px] text-[#828282] mt-0.5">On disk</div>
+                        </div>
+                    </div>
+
+                    <!-- Column Health Summary Badges -->
+                    <div class="mt-4 pt-4 border-t border-[#1a1b26]">
+                        <div class="text-xs font-semibold text-[#828282] mb-2 flex items-center justify-between">
+                            <span>Column Health & Null Analysis:</span>
+                            <button id="toggle-col-stats-btn" class="text-[#019FFD] hover:underline text-xs flex items-center space-x-1">
+                                <span>Toggle Details</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                        <div id="column-stats-container" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 max-h-56 overflow-y-auto pr-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 3: Cleaning, Extraction & Sorting Suite -->
+                <section class="glass-panel overflow-hidden">
+                    <!-- Navigation Tabs (Reordered without numbers or Key Feature tag) -->
+                    <div class="flex border-b border-[#1a1b26] bg-[#0c0d12]/80 overflow-x-auto text-sm font-medium">
+                        <button class="tab-btn active px-5 py-3.5 border-b-2 border-transparent transition-all flex items-center space-x-2 shrink-0" data-tab="tab-columns">
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                            <span>Columns & Renaming</span>
+                        </button>
+                        <button class="tab-btn px-5 py-3.5 border-b-2 border-transparent transition-all flex items-center space-x-2 shrink-0" data-tab="tab-blanks">
+                            <i data-lucide="eraser" class="w-4 h-4"></i>
+                            <span>Blank & Duplicates</span>
+                        </button>
+                        <button class="tab-btn px-5 py-3.5 border-b-2 border-transparent transition-all flex items-center space-x-2 shrink-0" data-tab="tab-text">
+                            <i data-lucide="type" class="w-4 h-4"></i>
+                            <span>Casing & Number Scrubbing</span>
+                        </button>
+                        <button class="tab-btn px-5 py-3.5 border-b-2 border-transparent transition-all flex items-center space-x-2 shrink-0" data-tab="tab-extractor">
+                            <i data-lucide="filter" class="w-4 h-4 text-[#019FFD]"></i>
+                            <span>Bulk Match & Extractor</span>
+                        </button>
+                        <button class="tab-btn px-5 py-3.5 border-b-2 border-transparent transition-all flex items-center space-x-2 shrink-0" data-tab="tab-sorting">
+                            <i data-lucide="arrow-up-down" class="w-4 h-4"></i>
+                            <span>Multi-Column Sort</span>
+                        </button>
+                        <button class="tab-btn px-5 py-3.5 border-b-2 border-transparent transition-all flex items-center space-x-2 shrink-0" data-tab="tab-rules">
+                            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                            <span>Custom Filter Rules</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab: Blank & Duplicates -->
+                    <div id="tab-blanks" class="tab-content hidden p-6 space-y-6">
+                        <!-- Top Announcement Banner -->
+                        <div class="bg-gradient-to-r from-rose-950/40 via-red-950/20 to-[#0c0d12] border border-rose-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 rounded-lg bg-rose-500/20 text-rose-400">
+                                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Strict Blank & Null Eliminator</h4>
+                                    <p class="text-xs text-[#828282]">Choose how aggressively you want to delete rows and columns that contain blank or null cells.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-300 text-xs font-semibold border border-rose-500/30">
+                                    Zero-Null Mode Available
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Left Panel: Blank Column Control -->
+                            <div class="glass-card p-5 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2 text-rose-400 font-semibold text-sm">
+                                        <i data-lucide="columns" class="w-4 h-4"></i>
+                                        <span>Delete Blank Columns</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-mono">Column Rules</span>
+                                </div>
+
+                                <!-- Standard: Delete 100% empty columns -->
+                                <label class="flex items-start space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="chk-remove-blank-cols" checked class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                    <div>
+                                        <span class="text-xs font-medium text-white">Delete 100% Empty Columns</span>
+                                        <p class="text-[11px] text-[#828282] mt-0.5">Detects columns where every single cell is null or whitespace.</p>
+                                    </div>
+                                </label>
+
+                                <!-- Threshold Slider -->
+                                <div class="pt-2 border-t border-[#1a1b26]">
+                                    <label class="flex items-start space-x-3 cursor-pointer">
+                                        <input type="checkbox" id="chk-threshold-cols" class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                        <div class="w-full">
+                                            <span class="text-xs font-medium text-white">Delete columns with high null percentage</span>
+                                            <div class="flex items-center space-x-3 mt-1.5">
+                                                <input type="range" id="threshold-slider" min="50" max="99" value="90" class="w-full h-1.5 bg-[#1a1b26] rounded-lg appearance-none cursor-pointer">
+                                                <span id="threshold-val-text" class="text-xs font-mono text-[#019FFD] w-12 font-bold">90%</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Blank Columns Tags -->
+                                <div id="detected-blank-cols-list" class="p-3 rounded-lg bg-[#040404] border border-[#1a1b26] text-xs">
+                                    <span class="text-[#828282] font-medium">100% Blank columns detected:</span>
+                                    <div id="blank-cols-tags" class="flex flex-wrap gap-1.5 mt-2">
+                                        <span class="text-[#828282] italic">None detected</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Panel: Blank Rows Control -->
+                            <div class="glass-card p-5 space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2 text-[#019FFD] font-semibold text-sm">
+                                        <i data-lucide="rows" class="w-4 h-4"></i>
+                                        <span>Delete Blank Rows</span>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded bg-[#019FFD]/10 text-[#019FFD] border border-[#019FFD]/20 font-mono">Row Rules</span>
+                                </div>
+
+                                <!-- Delete rows by selected column heads -->
+                                <div class="space-y-2.5">
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                                        <div>
+                                            <span class="text-xs font-semibold text-white">Delete Rows where Heads are Blank:</span>
+                                            <p class="text-[10px] text-[#828282]">Target specific or all column headers</p>
+                                        </div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <button type="button" id="btn-select-all-null-heads" class="btn-primary-gradient px-2.5 py-1 rounded text-white text-[11px] font-semibold flex items-center space-x-1 shadow-sm transition-all">
+                                                <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
+                                                <span>Select All Heads Together</span>
+                                            </button>
+                                            <button type="button" id="btn-deselect-all-null-heads" class="px-2 py-1 rounded bg-[#040404] hover:bg-[#141620] text-gray-300 text-[11px] border border-[#1a1b26] transition-all">
+                                                <span>Clear</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Selection mode radio -->
+                                    <div class="flex items-center space-x-4 text-xs bg-[#040404] p-2 rounded-lg border border-[#1a1b26]">
+                                        <label class="flex items-center space-x-1.5 text-gray-300 cursor-pointer">
+                                            <input type="radio" name="drop_null_mode" value="any" checked class="text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                            <span class="font-medium text-[#019FFD]">Drop if ANY selected head is blank</span>
+                                        </label>
+                                        <label class="flex items-center space-x-1.5 text-gray-300 cursor-pointer">
+                                            <input type="radio" name="drop_null_mode" value="all" class="text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                            <span>Drop only if ALL heads are blank</span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Search & Selection List for Null Heads -->
+                                    <div>
+                                        <div class="flex items-center justify-between text-[11px] text-[#828282] mb-1">
+                                            <span id="null-heads-selected-count" class="font-mono text-[#019FFD]">0 of 0 heads selected</span>
+                                            <input type="text" id="search-null-heads" placeholder="Filter heads..." class="bg-[#040404] border border-[#1a1b26] rounded px-2 py-0.5 text-[11px] text-white focus:outline-none">
+                                        </div>
+                                        <div id="null-heads-checklist" class="max-h-32 overflow-y-auto p-2 rounded-lg bg-[#040404] border border-[#1a1b26] grid grid-cols-2 gap-1.5 text-xs">
+                                            <!-- Checkboxes injected by JS -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Standard: Delete 100% empty rows -->
+                                <label class="flex items-start space-x-3 cursor-pointer pt-2 border-t border-[#1a1b26]">
+                                    <input type="checkbox" id="chk-remove-blank-rows" checked class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                    <div>
+                                        <span class="text-xs font-medium text-white">Delete 100% Empty Rows</span>
+                                        <p class="text-[11px] text-[#828282] mt-0.5">Eliminates rows containing no data across any column.</p>
+                                    </div>
+                                </label>
+
+                                <!-- Clean Display: Replace null text with empty cell "" -->
+                                <label class="flex items-start space-x-3 cursor-pointer pt-2 border-t border-[#1a1b26]">
+                                    <input type="checkbox" id="chk-replace-nulls-clean" checked class="mt-1 w-4 h-4 rounded text-emerald-500 bg-[#040404] border-[#1a1b26]">
+                                    <div>
+                                        <span class="text-xs font-medium text-emerald-300">Clean Empty Cells: Replace "null" text with clean blanks ("")</span>
+                                        <p class="text-[11px] text-[#828282] mt-0.5">Replaces remaining null values with true empty cells.</p>
+                                    </div>
+                                </label>
+
+                                <!-- Deduplication / Remove Repeating People -->
+                                <div class="pt-2 border-t border-[#1a1b26] space-y-2">
+                                    <label class="flex items-start space-x-3 cursor-pointer">
+                                        <input type="checkbox" id="chk-remove-duplicates" class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                        <div>
+                                            <span class="text-xs font-bold text-white flex items-center space-x-1.5">
+                                                <span>Deduplicate Rows & Remove Repeating People</span>
+                                            </span>
+                                            <p class="text-[11px] text-[#828282] mt-0.5">Ensure each person or record is unique with no repeating names.</p>
+                                        </div>
+                                    </label>
+
+                                    <div id="dedupe-options" class="pl-7 space-y-2.5 hidden">
+                                        <div class="p-2.5 rounded-lg bg-[#040404] border border-[#1a1b26] space-y-1.5">
+                                            <span class="text-[10px] font-semibold text-[#828282] uppercase tracking-wider">Quick Deduplicate Presets:</span>
+                                            <div class="flex flex-wrap gap-1.5">
+                                                <button type="button" id="btn-preset-dedupe-people" class="btn-primary-gradient px-2 py-1 rounded text-[11px] font-medium transition-all flex items-center space-x-1">
+                                                    <span>👤 Unique People (First + Last Name)</span>
+                                                </button>
+                                                <button type="button" id="btn-preset-dedupe-first" class="px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600/40 text-amber-200 text-[11px] font-medium border border-amber-500/30 transition-all flex items-center space-x-1">
+                                                    <span>⚡ Unique First Name</span>
+                                                </button>
+                                                <button type="button" id="btn-preset-dedupe-all" class="px-2 py-1 rounded bg-[#0c0d12] hover:bg-[#141620] text-gray-300 text-[11px] border border-[#1a1b26] transition-all">
+                                                    <span>Exact Full Row</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-center space-x-4 text-xs">
+                                            <label class="flex items-center space-x-1.5 text-gray-300">
+                                                <input type="radio" name="dedupe_keep" value="first" checked class="text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                                <span>Keep First Occurrence</span>
+                                            </label>
+                                            <label class="flex items-center space-x-1.5 text-gray-300">
+                                                <input type="radio" name="dedupe_keep" value="last" class="text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                                <span>Keep Last Occurrence</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="pt-1">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <label class="text-[11px] text-[#828282]">Selected key column(s) for deduplication:</label>
+                                                <button type="button" id="btn-select-all-dedupe-heads" class="text-[10px] text-[#019FFD] hover:underline">Select All Heads</button>
+                                            </div>
+                                            <select id="dedupe-key-cols" multiple class="w-full bg-[#040404] border border-[#1a1b26] rounded-lg p-2 text-xs text-white h-20">
+                                                <!-- Columns -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Casing & Number Scrubbing -->
+                    <div id="tab-text" class="tab-content hidden p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Text Casing & Transformations -->
+                            <div class="glass-card p-5 space-y-4">
+                                <div class="flex items-center space-x-2 text-[#019FFD] font-semibold text-sm">
+                                    <i data-lucide="type" class="w-4 h-4"></i>
+                                    <span>Row Text Casing & Normalization</span>
+                                </div>
+                                <label class="flex items-start space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="chk-trim-spaces" checked class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                    <div>
+                                        <span class="text-sm font-medium text-white">Trim leading & trailing whitespace</span>
+                                        <p class="text-xs text-[#828282] mt-0.5">Converts <code class="font-mono text-[#019FFD]">"  example  "</code> to <code class="font-mono text-emerald-400">"example"</code></p>
+                                    </div>
+                                </label>
+                                <label class="flex items-start space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="chk-collapse-spaces" class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                    <div>
+                                        <span class="text-sm font-medium text-white">Collapse multiple spaces into single space</span>
+                                        <p class="text-xs text-[#828282] mt-0.5">Converts <code class="font-mono text-[#019FFD]">"John&nbsp;&nbsp;&nbsp;Doe"</code> to <code class="font-mono text-emerald-400">"John Doe"</code></p>
+                                    </div>
+                                </label>
+
+                                <div class="pt-3 border-t border-[#1a1b26] space-y-3">
+                                    <label class="text-xs font-bold text-white flex items-center space-x-1.5">
+                                        <i data-lucide="case-sensitive" class="w-4 h-4 text-[#019FFD]"></i>
+                                        <span>Text Casing Options (Row Letter Case):</span>
+                                    </label>
+                                    <p class="text-[11px] text-[#828282]">Transform letter casing across text rows/columns in the dataset:</p>
+                                    <select id="sel-text-casing" class="w-full bg-[#040404] border border-[#1a1b26] rounded-xl p-3 text-xs text-white focus:border-[#019FFD] focus:outline-none">
+                                        <option value="">Keep Original Casing</option>
+                                        <option value="uppercase">UPPERCASE ALL TEXT (FULLY CASE ALL / ALL CAPS)</option>
+                                        <option value="lowercase">lowercase all text</option>
+                                        <option value="titlecase">Title Case (Capitalize 1st Letter of Each Word)</option>
+                                        <option value="sentencecase">Sentence case (Capitalize 1st Letter of Sentence)</option>
+                                    </select>
+
+                                    <!-- Column Selection for Casing -->
+                                    <div class="p-3 rounded-xl border border-[#1a1b26] bg-[#040404]/60 space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-medium text-gray-300">Select Headers for Casing:</span>
+                                            <div class="flex items-center space-x-2 text-xs">
+                                                <button type="button" id="btn-select-all-casing-heads" class="text-[#019FFD] hover:underline">Select All</button>
+                                                <span class="text-[#1a1b26]">|</span>
+                                                <button type="button" id="btn-deselect-all-casing-heads" class="text-[#828282] hover:underline">Deselect All</button>
+                                                <span id="casing-heads-selected-count" class="text-[10px] text-[#019FFD] font-mono ml-1">0 selected</span>
+                                            </div>
+                                        </div>
+                                        <div id="casing-heads-checklist" class="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto p-2 bg-[#040404] rounded-lg border border-[#1a1b26] text-xs">
+                                            <!-- Dynamic header checkboxes -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Number & Currency Cleaners -->
+                            <div class="glass-card p-5 space-y-4">
+                                <div class="flex items-center space-x-2 text-emerald-400 font-semibold text-sm">
+                                    <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                                    <span>Numeric & Currency Scrubbing</span>
+                                </div>
+                                <label class="flex items-start space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="chk-clean-numeric" class="mt-1 w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                    <div>
+                                        <span class="text-sm font-medium text-white">Clean & Convert Currencies / Formatted Numbers</span>
+                                        <p class="text-xs text-[#828282] mt-0.5">Strips currency symbols (<code class="text-emerald-400">$</code>, <code class="text-emerald-400">₹</code>, <code class="text-emerald-400">€</code>, <code class="text-emerald-400">£</code>), commas, and percent signs to pure floats.</p>
+                                    </div>
+                                </label>
+
+                                <div class="pt-2 border-t border-[#1a1b26]">
+                                    <label class="text-xs font-medium text-gray-300 block mb-1">Fill Missing / Null Cells With:</label>
+                                    <select id="sel-fill-nulls" class="w-full bg-[#040404] border border-[#1a1b26] rounded-lg p-2.5 text-xs text-white">
+                                        <option value="">Leave as Null / Empty</option>
+                                        <option value="custom">Custom Text String</option>
+                                        <option value="zero">Fill with Zero (0)</option>
+                                        <option value="forward">Forward Fill (carry previous value)</option>
+                                        <option value="backward">Backward Fill (carry next value)</option>
+                                        <option value="mean">Mean (Average for numeric cols)</option>
+                                        <option value="median">Median (for numeric cols)</option>
+                                    </select>
+                                    <input type="text" id="input-fill-custom" placeholder="e.g. N/A or Not Specified" class="hidden mt-2 w-full bg-[#040404] border border-[#1a1b26] rounded-lg p-2 text-xs text-white">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Bulk Match & Extractor -->
+                    <div id="tab-extractor" class="tab-content hidden p-6 space-y-6">
+                        <div class="bg-gradient-to-r from-[#0c0d12] via-[#0a101f] to-[#0c0d12] border border-[#019FFD]/30 rounded-xl p-4">
+                            <div class="flex items-center space-x-2 text-[#019FFD] font-bold text-sm">
+                                <i data-lucide="target" class="w-4 h-4"></i>
+                                <span>Extract Required Rows by Long List of Data</span>
+                            </div>
+                            <p class="text-xs text-[#828282] mt-1 leading-relaxed">
+                                Have a long list of 500, 5,000, or 50,000 Customer IDs, Order Numbers, Phone Numbers, or Emails? Paste them below or upload a list file. CleanXcel will filter 1,000,000+ rows instantly!
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Configuration -->
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-300 block mb-1">1. Select Target Column to Match:</label>
+                                    <select id="sel-extractor-col" class="w-full bg-[#040404] border border-[#1a1b26] rounded-lg p-2.5 text-xs text-white font-medium">
+                                        <!-- Populated by JS -->
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-300 block mb-1">2. Action Mode:</label>
+                                    <div class="grid grid-cols-2 gap-2 text-xs">
+                                        <label class="p-2.5 rounded-lg border border-[#019FFD]/40 bg-[#019FFD]/10 cursor-pointer flex items-center space-x-2">
+                                            <input type="radio" name="bulk_mode" value="keep" checked class="text-[#019FFD] bg-[#040404]">
+                                            <span class="font-medium text-[#019FFD]">Extract & Keep</span>
+                                        </label>
+                                        <label class="p-2.5 rounded-lg border border-[#1a1b26] bg-[#040404] cursor-pointer flex items-center space-x-2">
+                                            <input type="radio" name="bulk_mode" value="exclude" class="text-[#019FFD] bg-[#040404]">
+                                            <span class="text-gray-300">Exclude Matches</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-300 block mb-1">3. Matching Sensitivity:</label>
+                                    <select id="sel-extractor-type" class="w-full bg-[#040404] border border-[#1a1b26] rounded-lg p-2.5 text-xs text-white">
+                                        <option value="exact">Exact Match (Fastest - Rust Set Lookup)</option>
+                                        <option value="case_insensitive">Case-Insensitive Match</option>
+                                        <option value="contains">Contains / Substring Match</option>
+                                    </select>
+                                </div>
+
+                                <div class="pt-2 border-t border-[#1a1b26]">
+                                    <label class="text-xs font-semibold text-gray-300 block mb-1">Or Upload Match List File:</label>
+                                    <input type="file" id="lookup-file-input" class="text-xs text-[#828282] file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#0c0d12] file:text-[#019FFD] hover:file:bg-[#141620] cursor-pointer w-full" accept=".txt,.csv">
+                                    <div id="lookup-file-status" class="hidden text-xs text-emerald-400 mt-1.5 flex items-center space-x-1">
+                                        <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                        <span id="lookup-file-status-text">Loaded 0 items</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Long List Textarea -->
+                            <div class="md:col-span-2 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-xs font-semibold text-gray-300">
+                                        Paste Your List of Values (IDs, Keys, Codes, etc.):
+                                    </label>
+                                    <div class="flex items-center space-x-2">
+                                        <span id="lookup-count-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-[#0c0d12] text-[#828282] border border-[#1a1b26]">0 items detected</span>
+                                        <button id="btn-clear-lookup" class="text-xs text-rose-400 hover:underline">Clear</button>
+                                    </div>
+                                </div>
+                                <textarea id="lookup-values-text" rows="8" placeholder="Paste data here (one per line, or comma/tab separated)...
+Example:
+CUST-10024
+CUST-10058
+CUST-10112
+user_452@example.com" class="w-full bg-[#040404] border border-[#1a1b26] rounded-xl p-3 text-xs text-white font-mono focus:border-[#019FFD] focus:ring-1 focus:ring-[#019FFD] focus:outline-none"></textarea>
+                                <p class="text-[11px] text-[#828282]">Automatically parses newlines, commas, quotes, and tabs.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Columns & Renaming (Active Default) -->
+                    <div id="tab-columns" class="tab-content p-6 space-y-6">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Select Columns & Rename Headers</h4>
+                                <p class="text-xs text-[#828282]">Only selected headers will be included in the clean export.</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" id="btn-select-all-cols" class="btn-primary-gradient px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+                                    Select All
+                                </button>
+                                <button type="button" id="btn-deselect-all-cols" class="px-3 py-1.5 rounded-lg bg-[#040404] hover:bg-[#141620] text-gray-300 text-xs border border-[#1a1b26]">
+                                    Deselect All
+                                </button>
+                                <button type="button" id="btn-invert-cols" class="px-3 py-1.5 rounded-lg bg-[#040404] hover:bg-[#141620] text-gray-300 text-xs border border-[#1a1b26]">
+                                    Invert Selection
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <input type="text" id="filter-cols-search" placeholder="Search column headers..." class="w-full sm:w-80 bg-[#040404] border border-[#1a1b26] rounded-lg px-3 py-2 text-xs text-white placeholder-[#828282] focus:outline-none focus:border-[#019FFD]">
+                            
+                            <div class="border border-[#1a1b26] rounded-xl overflow-hidden max-h-72 overflow-y-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-[#0c0d12] text-gray-300 sticky top-0 border-b border-[#1a1b26]">
+                                        <tr>
+                                            <th class="p-3 w-12 text-center">Include</th>
+                                            <th class="p-3">Original Header</th>
+                                            <th class="p-3">Data Type</th>
+                                            <th class="p-3">Rename Header To</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="columns-selection-tbody" class="divide-y divide-[#1a1b26] text-gray-200">
+                                        <!-- Columns Rows Injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 5: Multi-Column Sort -->
+                    <div id="tab-sorting" class="tab-content hidden p-6 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Multi-Column Sorting</h4>
+                                <p class="text-xs text-[#828282]">Add levels to sort your dataset (e.g. Sort by Column A, then Column B).</p>
+                            </div>
+                            <button id="btn-add-sort-col" class="btn-primary-gradient px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>Add Sort Level</span>
+                            </button>
+                        </div>
+
+                        <div id="sorting-rules-container" class="space-y-3">
+                            <!-- Sort rules injected by JS -->
+                        </div>
+
+                        <div class="pt-2 border-t border-[#1a1b26]">
+                            <label class="flex items-center space-x-2 text-xs text-gray-300 cursor-pointer">
+                                <input type="checkbox" id="chk-sort-nulls-last" checked class="w-4 h-4 rounded text-[#019FFD] bg-[#040404] border-[#1a1b26]">
+                                <span>Place null / empty values at the end of sorted output</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tab 6: Custom Rules -->
+                    <div id="tab-rules" class="tab-content hidden p-6 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Custom Filter Rules</h4>
+                                <p class="text-xs text-[#828282]">Add conditional filters (e.g. Status = "Active", Amount > 500).</p>
+                            </div>
+                            <button id="btn-add-filter-rule" class="btn-primary-gradient px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>Add Rule</span>
+                            </button>
+                        </div>
+
+                        <div id="custom-filters-container" class="space-y-3">
+                            <!-- Filter rules injected by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 4: Execution & Preview Controls -->
+                <section id="preview-section" class="glass-panel p-6 space-y-6">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3">
+                            <button id="btn-apply-preview" class="btn-primary-gradient px-6 py-3 rounded-xl text-sm font-bold flex items-center space-x-2 shadow-lg">
+                                <i data-lucide="play" class="w-4 h-4 text-white"></i>
+                                <span>Apply Rules & Process Preview</span>
+                            </button>
+                            <span id="preview-speed-badge" class="hidden px-3 py-1 rounded-lg text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                Cleaned in 14.2ms
+                            </span>
+                        </div>
+
+                        <!-- Before vs After Diff Stats Pill -->
+                        <div class="flex items-center space-x-4 text-xs font-mono bg-[#040404] p-2.5 rounded-xl border border-[#1a1b26]">
+                            <div>
+                                <span class="text-[#828282]">Rows:</span>
+                                <span id="diff-rows-before" class="text-white">0</span>
+                                <span class="text-[#019FFD]">➔</span>
+                                <span id="diff-rows-after" class="text-emerald-400 font-bold">0</span>
+                                <span id="diff-rows-pct" class="text-xs text-[#019FFD] font-semibold ml-1"></span>
+                            </div>
+                            <span class="text-[#1a1b26]">|</span>
+                            <div>
+                                <span class="text-[#828282]">Cols:</span>
+                                <span id="diff-cols-before" class="text-white">0</span>
+                                <span class="text-[#019FFD]">➔</span>
+                                <span id="diff-cols-after" class="text-emerald-400 font-bold">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Virtualized Preview Table -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span id="preview-row-count-text" class="text-xs font-medium text-[#828282]">Top 100 Sample Rows Preview:</span>
+                            <input type="text" id="preview-table-search" placeholder="Filter preview rows..." class="bg-[#040404] border border-[#1a1b26] rounded-lg px-2.5 py-1 text-xs text-white placeholder-[#828282] focus:outline-none">
+                        </div>
+
+                        <div class="data-table-container rounded-xl border border-[#1a1b26] bg-[#040404]">
+                            <table class="w-full data-table text-left text-xs whitespace-nowrap">
+                                <thead id="preview-table-head" class="text-gray-300 font-semibold border-b border-[#1a1b26]">
+                                    <!-- Headers -->
+                                </thead>
+                                <tbody id="preview-table-body" class="divide-y divide-[#1a1b26] text-gray-200">
+                                    <!-- Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 5: Export & Partition Suite -->
+                <section class="glass-panel p-6 space-y-6">
+                    <div>
+                        <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                            <i data-lucide="download-cloud" class="w-5 h-5 text-[#019FFD]"></i>
+                            <span>Export Cleaned Dataset</span>
+                        </h3>
+                        <p class="text-xs text-[#828282] mt-0.5">Select your desired file format for instant multi-gigabyte export.</p>
+                    </div>
+
+                    <!-- Format Pickers -->
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <button type="button" class="export-format-label p-3 rounded-xl border border-[#1a1b26] bg-[#040404] hover:border-[#019FFD] transition-all text-center cursor-pointer" data-fmt="xlsx">
+                            <span class="block text-sm font-bold text-white">Excel (.xlsx)</span>
+                            <span class="text-[10px] text-[#828282] block mt-0.5">Unified Workbook</span>
+                        </button>
+
+                        <button type="button" class="export-format-label p-3 rounded-xl border border-[#1a1b26] bg-[#040404] hover:border-[#019FFD] transition-all text-center cursor-pointer" data-fmt="csv">
+                            <span class="block text-sm font-bold text-white">CSV (.csv)</span>
+                            <span class="text-[10px] text-[#828282] block mt-0.5">Comma Separated</span>
+                        </button>
+
+                        <button type="button" class="export-format-label p-3 rounded-xl border border-[#1a1b26] bg-[#040404] hover:border-[#019FFD] transition-all text-center cursor-pointer" data-fmt="parquet">
+                            <span class="block text-sm font-bold text-white">Parquet</span>
+                            <span class="text-[10px] text-[#828282] block mt-0.5">High Speed Columnar</span>
+                        </button>
+
+                        <button type="button" class="export-format-label p-3 rounded-xl border border-[#1a1b26] bg-[#040404] hover:border-[#019FFD] transition-all text-center cursor-pointer" data-fmt="tsv">
+                            <span class="block text-sm font-bold text-white">TSV (.tsv)</span>
+                            <span class="text-[10px] text-[#828282] block mt-0.5">Tab Separated</span>
+                        </button>
+
+                        <button type="button" class="export-format-label p-3 rounded-xl border border-[#1a1b26] bg-[#040404] hover:border-[#019FFD] transition-all text-center cursor-pointer" data-fmt="html">
+                            <span class="block text-sm font-bold text-white">HTML Report</span>
+                            <span class="text-[10px] text-[#828282] block mt-0.5">Interactive Web Table</span>
+                        </button>
+                    </div>
+
+                    <!-- Primary Export Button (Centered & Compact Size) -->
+                    <div class="pt-4 flex justify-center w-full">
+                        <button id="btn-export-download" class="btn-primary-gradient px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center space-x-2.5 shadow-lg hover:scale-105 transition-transform">
+                            <i data-lucide="download" class="w-4 h-4 text-white"></i>
+                            <span id="export-btn-text">Download Cleaned File</span>
+                        </button>
+                    </div>
+
+                    <!-- Success Download Box -->
+                    <div id="export-success-box" class="hidden mt-4 max-w-xl mx-auto p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between shadow-lg backdrop-blur-sm transition-all">
+                        <div class="flex items-center space-x-3 text-emerald-400 text-xs font-medium">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 flex-shrink-0"></i>
+                            <div>
+                                <div class="font-bold text-sm text-emerald-300">Export Completed</div>
+                                <span id="export-success-msg" class="text-[11px] text-emerald-400/80 block">File ready!</span>
+                            </div>
+                        </div>
+                        <a id="export-direct-link" href="#" target="_blank" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md flex items-center space-x-1.5 flex-shrink-0">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            <span id="export-link-text">Open File</span>
+                        </a>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Google Drive URL Import Modal -->
+    <div id="drive-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="glass-panel p-6 sm:p-8 max-w-lg w-full rounded-2xl border border-[#019FFD]/30 space-y-5 relative spotlight-box shadow-2xl">
+            <button id="btn-close-drive-modal" class="absolute top-4 right-4 text-[#828282] hover:text-white p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center space-x-3">
+                <div class="p-3 rounded-xl bg-[#019FFD]/15 text-[#019FFD] border border-[#019FFD]/30">
+                    <i data-lucide="hard-drive" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Upload from Google Drive</h3>
+                    <p class="text-xs text-[#828282]">Paste a public Google Drive share link or direct file URL</p>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-gray-300 block">Google Drive Link / URL:</label>
+                <input type="url" id="drive-url-input" placeholder="https://drive.google.com/file/d/FILE_ID/view?usp=sharing" class="w-full bg-[#040404] border border-[#1a1b26] rounded-xl p-3 text-xs text-white placeholder-[#828282] focus:outline-none focus:border-[#019FFD]">
+                <p class="text-[11px] text-[#828282]">Ensure the file access is set to "Anyone with the link can view".</p>
+            </div>
+
+            <div class="flex items-center justify-end space-x-3 pt-2">
+                <button id="btn-cancel-drive" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-[#0c0d12] text-gray-300 border border-[#1a1b26] hover:bg-[#141620]">
+                    Cancel
+                </button>
+                <button id="btn-submit-drive" type="button" class="btn-primary-gradient px-5 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-md">
+                    <i data-lucide="download" class="w-4 h-4 text-white"></i>
+                    <span>Fetch & Stream File</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-[#1a1b26] py-6 bg-[#040404] text-center text-xs text-[#828282] w-full">
+        <p>CleanXcel • High-Scale Excel & CSV Data Cleaning Engine • Optimized for 10 Lakhs+ Records</p>
+    </footer>
+
+    <!-- Client JS -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

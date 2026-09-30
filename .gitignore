@@ -1,0 +1,35 @@
+# Python & Virtual Environments
+venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Uploads and Exports (Ignore large datasets while preserving folder structure)
+uploads/*
+!uploads/.gitkeep
+exports/*
+!exports/.gitkeep
+
+# macOS & System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs & Cache
+*.log
+.pytest_cache/
